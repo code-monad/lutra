@@ -27,14 +27,20 @@ primitive CLI
 		[
 		  OptionSpec.string(
 		  "port", "Connection port, default to be 22", 'p', "22")
+		  OptionSpec.string(
+		  "key", "Which ssh key to use", 'k', "")
 		  OptionSpec.bool(
 		  "list", "List all nodes", 'l', false)
 		  OptionSpec.bool(
 		  "add", "Adding a new node", 'a', false)
 		  OptionSpec.bool(
 		  "delete", "Deleting a node", 'd', false)
+		  OptionSpec.bool(
+		  "update", "Update a node", 'u', false)
 		  OptionSpec.string(
 		  "apply", "Applying a new config file", 'f', "")
+		  OptionSpec.bool(
+		  "default", "Set a node as default", 's', false)
 		],
 		[ ArgSpec.string(
 		  "node", "The node name", "")
@@ -46,8 +52,18 @@ primitive CLI
 
 primitive HostPrint
 	fun apply(host: Host): String =>
-		"Host: " + host._1 + ", Port:" + host._2
+		"Host: " + host._1 + ", Port:" + host._2 +
+		match host._3
+			| None => ""
+			| let key: String => ", Key:" + key
+		end
 
 primitive NodePrint
 	fun apply(node: Node, default: Bool = false): String =>
 		"["+ if default then "*" else "" end + node._1 + "]  " + HostPrint(node._2)
+
+
+// Get user's home path from Env.vars
+primitive GetHome
+	fun apply(vars: Array[String val] val): (String|None) =>
+		try EnvVars(vars)("HOME")? end

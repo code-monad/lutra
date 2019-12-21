@@ -10,26 +10,13 @@ class SSH
 	fun val base_command(): String val => _command
 
 	// Building ssh command string
-	fun command(host': Host, key': (None | FilePath) = None): (String val,  Array[String val] val)=>
-		let args = recover Array[String val] end
-		args.>push("-S").>push("-tt") // use stdin to read password
-		args.>push("-p").push(host'._2)
-			match key'
-				| let path: FilePath =>
-				if path.exists() then
-					args.>push("-i").push(path.path)
-				end
-			end
-		args.push(host'._1)
-		(_command.string(), recover args end)
-
-
-class SSHNotify is InputNotify
-
-	let _pm: ProcessMonitor
-	
-	new iso create(pm: ProcessMonitor) =>
-		_pm = pm
-
-	fun ref apply(data: Array[U8 val] iso) : None val =>
-		_pm.>write(consume data)
+	fun command(host': Host): Array[String val] val=>
+		let command_str = recover Array[String val] end
+		command_str.push(_command.string())
+		command_str.>push("-p").push(host'._2)
+		match host'._3
+			| let key: String =>
+			command_str.>push("-i").push(key)
+		end
+		command_str.push(host'._1)
+		command_str

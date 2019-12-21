@@ -16,15 +16,30 @@ actor Main
 				end
 				return
 			end
-
+		
 		let config_dest =
 			match command.option("apply").string()
 				| "" =>
-				"lutra.conf"
+				match GetHome(env.vars)
+					| let home : String =>
+					let config_dir: String = Path.join(home, ".config/lutra")
+					try
+						let config_dir_path = FilePath(env.root as AmbientAuth, config_dir)?
+						if not config_dir_path.exists() then
+							config_dir_path.mkdir()
+							env.out.print("Create path " + config_dir)
+						end
+					else
+						env.err.print("Filed to create " + config_dir)
+					end
+					Path.join(config_dir, "lutra.conf")
+				else
+					"lutra.conf"
+				end
+				
 				| let f: String =>
 				f
 			end
-			
 
 		let config_path =
 			match try FilePath(env.root as AmbientAuth, config_dest)? else None end
@@ -52,9 +67,12 @@ actor Main
 				| None =>
 				env.out.print("Error while loading config" + config_dest + ", exit...")
 				return
-			end			
-
+		end
+				
+		
 		let config_file = File(config_path)
+
+		
 		match Config(consume config_file, env.out).parse()
 			| None =>
 			env.out.print("Failed to parse " + config_path.path + ", maybe a syntax error.")
@@ -72,7 +90,10 @@ actor Main
 			end
 
 			if command.option("add").bool() then
-				config(command.arg("node").string(),command.arg("dest").string())
+				let key = command.option("key").string()
+				if not config(command.arg("node").string(),command.arg("dest").string(), command.option("port").string(), if key.size() == 0 then None else key end,command.option("default").bool()) then
+					env.err.print("Node " + command.arg("node").string() + " already existed. Use -u to update it.")
+				end
 				config.save()
 				return
 			end
@@ -97,14 +118,10 @@ actor Main
 			let host = config.node(node)
 			env.out.print("Host is " + host._1 + " " + host._2)
 			let ssh: SSH = config.ssh
-			(let ssh_command, let args) = ssh.command(host)
 			try
-				let pm = Invoke(env.out, env.err, env.input, env.root as AmbientAuth, ssh_command, recover args.clone() end, env.vars)?
-				let ssh_notify = SSHNotify(pm)
-				env.input(consume ssh_notify)
-				//let pm = Invoke(env.out, env.err, env.root as AmbientAuth, ssh_command, [], env.vars)?
+				Shell.from_array(ssh.command(host))?
 			else
-				env.err.print("Failed to invoke " + ssh_command + ", maybe it is not exist.")
+				env.err.print("Failed to invoke Secure-Shell, maybe it is not exist.")
 			end
 			
 		end
