@@ -52,23 +52,25 @@ After this command, lutra will use `test` as default host.
 
 #### Options:
 
-	-l, --list=false       List all nodes
+	-i, --identify        Specify a username to connect with
+
+	-l, --list            List all nodes
 	
-	-h, --help=false       Get this page.
+	-h, --help            Get this page.
 	
-	-a, --add=false        Adding a new node
+	-a, --add             Adding a new node
 	
-	-s, --default=false    Set a node as default
+	-s, --default         Set a node as default
 	
-	-f, --apply=           Applying a new config file
+	-f, --apply           Applying a new config file
 	
-	-d, --delete=false     Deleting a node
+	-d, --delete          Deleting a node
 	
-	-k, --key=             Which ssh key to use
+	-k, --key             Which ssh key to use
 	
-	-u, --update=false     Update a node
+	-u, --update          Update a node
 	
-	-p, --port=22          Connection port, default to be 22
+	-p, --port=22         Connection port, default to be 22
 	
 Args:
    <node>    Given host name

@@ -45,23 +45,25 @@ Arch 用户可以直接从AUR安装。假设你使用的是`yay`，则可以
 
 #### 参数:
 
-	-l, --list=false       	列出所有节点
+	-i, --identify          指定连接时使用的用户名
 	
-	-h, --help=false       	打印帮助
+	-l, --list             	列出所有节点
 	
-	-a, --add=false        	添加一个节点
+	-h, --help              打印帮助
+	
+	-a, --add               添加一个节点
 	
 	-s, --default=false    	将节点设为默认连接
 	
 	-f, --apply           	使用一个配置文件
 	
-	-d, --delete			删除一个节点
+	-d, --delete            删除一个节点
 	
-	-k, --key				指定该连接使用的SSH_KEY
+	-k, --key               指定该连接使用的SSH_KEY
 	
-	-u, --update			更新已保存的节点信息
+	-u, --update            更新已保存的节点信息
 	
-	-p, --port=22			连接端口，默认为22
+	-p, --port=22           连接端口，默认为22
 	
 	Args:
    		node    节点名
