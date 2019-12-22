@@ -1,6 +1,6 @@
 # Lutra - A Simple CommandLine Security-Shell Manager written in Pony 🐴
 
-*(中文说明)[./README.zh]*
+(中文说明)[./README.zh]
 
 ## Installation
 
