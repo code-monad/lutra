@@ -28,6 +28,8 @@ primitive CLI
 		  OptionSpec.string(
 		  "port", "Connection port, default to be 22", 'p', "22")
 		  OptionSpec.string(
+		  "identity", "Specify a username to connect with", 'i', "")
+		  OptionSpec.string(
 		  "key", "Which ssh key to use", 'k', "")
 		  OptionSpec.bool(
 		  "list", "List all nodes", 'l', false)

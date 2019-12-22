@@ -3,7 +3,7 @@ use "ini"
 use "collections"
 use "debug"
 
-type Host is (String val, String val, (String val|None)) // dest, port, [key]
+type Host is (String val, String val, (String val | None), (String val|None)) // dest, port, [username], [key]
 type Node is (String val, Host)
 type Nodes is Map[String val, Host]
 
@@ -29,6 +29,11 @@ primitive NewNodeConfig
 		end +
 		match node._2._3
 			| None => ""
+			| let user: String => "user = " + user + "\n"
+		end
+		+
+		match node._2._4
+			| None => ""
 			| let key: String => "key = " + key + "\n"
 		end
 		
@@ -49,7 +54,7 @@ class Config
 	fun default(): Node => (default_node, node(default_node))
 
 	fun node(name: String val): Host val =>
-		_nodes.get_or_else(name, ("","",""))
+		_nodes.get_or_else(name, ("","","", ""))
 
 	fun exist(name: String val): Bool val =>
 		_nodes.contains(name)
@@ -67,13 +72,13 @@ class Config
 	fun empty(): Bool =>
 		_nodes.size() == 0
 		
-	fun ref apply(name: String val, host: String val, port: String val = "22", key: (String val| None), is_default: Bool val = false, update: Bool = false): Bool =>
+	fun ref apply(name: String val, host: String val, port: String val = "22", user: (String val| None), key: (String val| None), is_default: Bool val = false, update: Bool = false): Bool =>
 		if not update then
 			if exist(name) then
 				return false
 			end
 		end
-		_nodes.insert(name, (host, port, key))
+		_nodes.insert(name, (host, port, user, key))
 		if is_default then
 			default_node = name
 		end
@@ -95,9 +100,10 @@ class Config
 				else
 					let host = sections(section)?("host")?
 					let port = sections(section)?("port")?
+					let user: (String|None) =  try sections(section)?("user")?.string() else None end
 					let key: (String|None) =  try sections(section)?("key")?.string() else None end
 					let is_default = try sections(section)?("default")?.bool()? else false end
-					apply(section, host, port, key, is_default)
+					apply(section, host, port, user ,key, is_default)
 				end
 			
 			end

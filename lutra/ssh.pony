@@ -15,6 +15,10 @@ class SSH
 		command_str.push(_command.string())
 		command_str.>push("-p").push(host'._2)
 		match host'._3
+			| let identity: String =>
+			command_str.>push("-l").push(identity)
+		end
+		match host'._4
 			| let key: String =>
 			command_str.>push("-i").push(key)
 		end

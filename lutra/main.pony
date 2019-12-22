@@ -92,10 +92,11 @@ actor Main
 			let add: Bool val = command.option("add").bool()
 			let update: Bool val = command.option("update").bool()
 			let target: String val = command.arg("node").string()
-
-			if add or update then
-				let key = command.option("key").string()
-				if not config(target,command.arg("dest").string(), command.option("port").string(), if key.size() == 0 then None else key end,command.option("default").bool(), update) then
+			let user: String val = command.option("identity").string()
+			let key = command.option("key").string()
+			
+			if add or update then	
+				if not config(target,command.arg("dest").string(), command.option("port").string(), if user.size() == 0 then None else user end, if key.size() == 0 then None else key end,command.option("default").bool(), update) then
 					if add then
 						env.err.print("Node [" + target + "] already existed. Use -u to update it.")
 					else
@@ -128,7 +129,14 @@ actor Main
 			
 			config.save()
 
-			let host = config.node(node)
+			let host_info: Host = config.node(node)
+			let host: Host = (host_info._1, host_info._2, if user.size() != 0 then user else host_info._3 end, if key.size() != 0 then key else host_info._4 end)
+			env.out.print(
+			host._1 + " " +
+			host._2 + " " +
+			user + key)
+			var cmd: Array[String] box = config.ssh.command(host)
+
 			let exitcode : I32 = Shell.from_array(config.ssh.command(host))
 			if (exitcode != 0) and (exitcode != 2) then // exitcode would be 2 if terminate password input
 				env.err.print("Error occured while forking ssh:" + exitcode.string())
