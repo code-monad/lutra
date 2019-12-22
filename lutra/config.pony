@@ -63,6 +63,9 @@ class Config
 			end
 		end
 		print
+
+	fun empty(): Bool =>
+		_nodes.size() == 0
 		
 	fun ref apply(name: String val, host: String val, port: String val = "22", key: (String val| None), is_default: Bool val = false, update: Bool = false): Bool =>
 		if not update then

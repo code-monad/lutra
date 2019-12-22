@@ -1,29 +1,23 @@
 use @system[I32](command: Pointer[U8] tag)
 
-interface val _ExitCodeFn
-  fun apply(code: I32)
-
-// TODO: Remove Shell hack in favor of cap-based implementations of actions.
 primitive Shell
   fun tag apply(
-    command: String,
-    exit_code_fn: (_ExitCodeFn | None) = None) ?
+    command: String) : I32
   =>
     var rc = @system(command.cstring())
     if (rc < 0) or (rc > 255) then rc = 1 end // clip out-of-bounds exit codes
-    try (exit_code_fn as _ExitCodeFn)(rc) end
-    if rc != 0 then error end
+	rc
 
   fun tag from_array(
-    command_args: Array[String] box,
-    exit_code_fn: (_ExitCodeFn | None) = None) ?
+    command_args: Array[String] box
+    ) : I32
   =>
     var command = recover trn String end
     for arg in command_args.values() do
       command.append(escape_arg(arg))
       command.push(' ')
     end
-    apply(consume command, exit_code_fn)?
+    apply(consume command)
 
   fun tag escape_arg(arg: String): String =>
     "'" + arg.clone() .> replace("'", "'\\''") + "'"

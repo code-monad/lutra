@@ -43,7 +43,7 @@ primitive CLI
 		  "default", "Set a node as default", 's', false)
 		],
 		[ ArgSpec.string(
-		  "node", "The node name", "")
+		  "node", "Given host name", "")
 		  ArgSpec.string(
 		  "dest", "Destination of the host", "")
 		]

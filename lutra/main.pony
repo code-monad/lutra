@@ -89,26 +89,39 @@ actor Main
 				return
 			end
 
-			if command.option("add").bool() then
+			let add: Bool val = command.option("add").bool()
+			let update: Bool val = command.option("update").bool()
+			let target: String val = command.arg("node").string()
+
+			if add or update then
 				let key = command.option("key").string()
-				if not config(command.arg("node").string(),command.arg("dest").string(), command.option("port").string(), if key.size() == 0 then None else key end,command.option("default").bool()) then
-					env.err.print("Node " + command.arg("node").string() + " already existed. Use -u to update it.")
+				if not config(target,command.arg("dest").string(), command.option("port").string(), if key.size() == 0 then None else key end,command.option("default").bool(), update) then
+					if add then
+						env.err.print("Node [" + target + "] already existed. Use -u to update it.")
+					else
+						env.err.print("Node [" + target + "] not exists. Use -a to add it.")
+					end
 				end
 				config.save()
 				return
 			end
 
-			let node: String = command.arg("node").string()
-
+			if config.empty() then
+				env.err.>print("You currently did not have a named host!").print("Please add one use `lutra -a [name] [host] [-p port] [-k ssh_key]`")
+				return
+			end
+			
+			var node: String = if target == "" then config.default()._1 else target end
+			
 			if config.exist(node) == false then
-				env.err.print(node+" does not exist, please your configuration!")
+				env.err.print(node+" does not exist, please check your configuration!")
 				env.exitcode(-1)
 				return 
 			end
 			
 			if command.option("delete").bool() then
-				env.out.print("Removing " + command.arg("node").string() + "...")
-				config.remove(command.arg("node").string())
+				env.out.print("Removing " + node + "...")
+				config.remove(node)
 				config.save()
 				return
 			end
@@ -116,12 +129,8 @@ actor Main
 			config.save()
 
 			let host = config.node(node)
-			env.out.print("Host is " + host._1 + " " + host._2)
-			let ssh: SSH = config.ssh
-			try
-				Shell.from_array(ssh.command(host))?
-			else
-				env.err.print("Failed to invoke Secure-Shell, maybe it is not exist.")
+			let exitcode : I32 = Shell.from_array(config.ssh.command(host))
+			if (exitcode != 0) and (exitcode != 2) then // exitcode would be 2 if terminate password input
+				env.err.print("Error occured while forking ssh:" + exitcode.string())
 			end
-			
 		end
