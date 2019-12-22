@@ -72,6 +72,6 @@ After this command, lutra will use `test` as default host.
 	
 	-p, --port=22         Connection port, default to be 22
 	
-Args:
-   <node>    Given host name
-   <dest>    Destination of the host
+	Args:
+   		<node>    Given host name
+   		<dest>    Destination of the host
