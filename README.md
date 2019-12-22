@@ -4,6 +4,13 @@
 
 ## Installation
 
+Arch users can install Lutra from AUR like above now.
+```shell
+yay -S lutra # Assumes you use the Yay
+```
+
+## Build From Source
+
 ### Dependency
 
 You'll need `ponyc` to build this program. Check [ponyc](https://github.com/ponylang/ponyc) if you don't know what it is.

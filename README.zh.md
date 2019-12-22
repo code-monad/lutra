@@ -2,6 +2,12 @@
 
 ## 安装指南
 
+Arch 用户可以直接从AUR安装。假设你使用的是`yay`，则可以
+
+`yay -S lutra # 假设使用yay作为包管理器, yaourt等同理`
+
+## 从源码编译安装
+
 ### 依赖
 
 编译该repo需要 `ponyc`。如果你还不知道**Ponylang/ponyc**是什么，看这里[ponyc](https://github.com/ponylang/ponyc).
