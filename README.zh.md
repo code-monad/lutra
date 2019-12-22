@@ -35,7 +35,7 @@
 
 ### 参数说明
 
-**命令格式: lutra [<options>] [node] [dest]**
+**命令格式: lutra [options] [node] [dest]**
 
 #### 参数:
 

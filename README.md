@@ -41,7 +41,7 @@ After this command, lutra will use `test` as default host.
 
 ### Parameters
 
-**usage: lutra [<options>] <node> <dest>**
+**usage: lutra [options] [node] [dest]**
 
 #### Options:
 
