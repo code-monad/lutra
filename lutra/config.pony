@@ -77,8 +77,22 @@ class Config
 			if exist(name) then
 				return false
 			end
+		else
+			if not exist(name) then
+				return false
+			end
 		end
-		_nodes.insert(name, (host, port, user, key))
+		let target_dest =
+			if update and (host == "") then
+				node(name)._1
+			else
+				host
+			end
+		if target_dest == "" then
+			return false
+		end
+				
+		_nodes.insert(name, (target_dest, port, user, key))
 		if is_default then
 			default_node = name
 		end

@@ -23,7 +23,9 @@ ifeq ($(static),true)
   LINKER += --static 
 endif
 
-$(binary):
+SOURCE_FILES := $(shell find $(SRC_DIR) -path $(SRC_DIR)/test -prune -o -name \*.pony)
+
+$(binary): $(SOURCE_FILES)
 	${PONYC} $(SRC_DIR) -o ${BUILD_DIR}
 
 $(BUILD_DIR):

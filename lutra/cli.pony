@@ -28,7 +28,7 @@ primitive CLI
 		  OptionSpec.string(
 		  "port", "Connection port, default to be 22", 'p', "22")
 		  OptionSpec.string(
-		  "identity", "Specify a username to connect with", 'i', "")
+		  "identify", "Specify a username to connect with", 'i', "")
 		  OptionSpec.string(
 		  "key", "Which ssh key to use", 'k', "")
 		  OptionSpec.bool(
@@ -51,18 +51,28 @@ primitive CLI
 		]
 		)?.>add_help("help", "Get this page.")?
 
+primitive OptionalPrint
+	fun apply(content: (None | String)): String =>
+		match content
+			| None => ""
+			| let c: String => c
+		end
 
 primitive HostPrint
 	fun apply(host: Host): String =>
 		"Host: " + host._1 + ", Port:" + host._2 +
 		match host._3
 			| None => ""
-			| let key: String => ", Key:" + key
+			| let user: String => ", user:" + user
+		end +
+		match host._4
+			| None => ""
+			| let key: String => ", key:" + key
 		end
 
 primitive NodePrint
 	fun apply(node: Node, default: Bool = false): String =>
-		"["+ if default then "*" else "" end + node._1 + "]  " + HostPrint(node._2)
+		"["+ if default then "*" else "" end + node._1 + "] " + HostPrint(node._2)
 
 
 // Get user's home path from Env.vars

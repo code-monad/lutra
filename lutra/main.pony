@@ -92,8 +92,8 @@ actor Main
 			let add: Bool val = command.option("add").bool()
 			let update: Bool val = command.option("update").bool()
 			let target: String val = command.arg("node").string()
-			let user: String val = command.option("identity").string()
-			let key = command.option("key").string()
+			let user: String val = command.option("identify").string()
+			let key: String val = command.option("key").string()
 			
 			if add or update then	
 				if not config(target,command.arg("dest").string(), command.option("port").string(), if user.size() == 0 then None else user end, if key.size() == 0 then None else key end,command.option("default").bool(), update) then
