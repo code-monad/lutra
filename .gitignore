@@ -1,0 +1,5 @@
+# Compiled Object
+*.o
+
+# Binary Dir
+bin/*
