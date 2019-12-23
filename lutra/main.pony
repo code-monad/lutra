@@ -129,12 +129,11 @@ actor Main
 			
 			config.save()
 
+			env.out.print("Connect to " + node + "...")
+
 			let host_info: Host = config.node(node)
 			let host: Host = (host_info._1, host_info._2, if user.size() != 0 then user else host_info._3 end, if key.size() != 0 then key else host_info._4 end)
-			env.out.print(
-			host._1 + " " +
-			host._2 + " " +
-			user + key)
+			
 			var cmd: Array[String] box = config.ssh.command(host)
 
 			let exitcode : I32 = Shell.from_array(config.ssh.command(host))
